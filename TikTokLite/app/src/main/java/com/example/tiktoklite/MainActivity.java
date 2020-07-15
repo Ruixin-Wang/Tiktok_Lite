@@ -11,10 +11,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import com.flyco.tablayout.SlidingTabLayout;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -24,15 +26,16 @@ public class MainActivity extends AppCompatActivity {
     private List<Fragment> list;
     private ViewPager viewPager;
     private mFragmentPagerAdapter Adapter;
-    private TabLayout mTabLayout;
-    private final int[] TAB_TITLES = new int[]{R.string.world,R.string.home,R.string.info};
+    private SlidingTabLayout  mTabLayout;
+    private String[] mTitlesArrays ={"广场","我的","主页"};
     private PlaceholderFragmentWorld mPlaceholderFragmentWorld;
     private PlaceholderFragmentHome mPlaceholderFragmentHome;
     private PlaceholderFragmentInfo mPlaceholderFragmentInfo;
 
     private ImageButton btn_post, btn_file, btn_rec, btn_cancel;
-    LinearLayout postMethod;
+    FrameLayout postMethod;
     private AnimatorSet animatorSet;
+    private ImageView plain;
 
 
     @SuppressLint("InflateParams")
@@ -40,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         list = new ArrayList<>();
         list.add(new PlaceholderFragmentWorld());
         list.add(new PlaceholderFragmentHome());
@@ -49,28 +51,18 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.viewpages);
         viewPager.setAdapter(Adapter);
         viewPager.setCurrentItem(0);
-
         btn_post = findViewById(R.id.btn_post);
         btn_file = findViewById(R.id.btn_file);
         btn_rec = findViewById(R.id.btn_rec);
         btn_cancel = findViewById(R.id.btn_cancel);
+        plain = findViewById(R.id.plain);
         postMethod = findViewById(R.id.post_method);
         postMethod.setVisibility(View.INVISIBLE);
+        mTabLayout = (SlidingTabLayout)findViewById(R.id.tablayout);
+        mTabLayout.setViewPager(viewPager, mTitlesArrays);
 
 
 
-        mTabLayout = (TabLayout)findViewById(R.id.tablayout);
-        for (int i = 0; i < TAB_TITLES.length; i++) {
-            TabLayout.Tab tab = mTabLayout.newTab();
-            View view = this.getLayoutInflater().inflate(R.layout.tab,null);
-            tab.setCustomView(view);
-
-            TextView tvTitle = (TextView)view.findViewById(R.id.tv_tab);
-            tvTitle.setText(TAB_TITLES[i]);
-            mTabLayout.addTab(tab);
-        }
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-        mTabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
         btn_post.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +93,34 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_cancel.setClickable(false);
+                btn_post.setClickable(false);
+                btn_post.setVisibility(View.VISIBLE);
+                btn_post.setAlpha((float)0.0);
+                ObjectAnimator rotate = ObjectAnimator.ofFloat(btn_cancel, "rotation", 0f, -45f).setDuration(700);
+                rotate.setInterpolator(new BounceInterpolator());
+                ObjectAnimator fade = ObjectAnimator.ofFloat(postMethod,"alpha",1.0f,0.0f).setDuration(700);
+                ObjectAnimator appear = ObjectAnimator.ofFloat(btn_post,"alpha",0.0f,1.0f).setDuration(900);
+                animatorSet = new AnimatorSet();
+                animatorSet.playTogether(rotate);
+                animatorSet.playTogether(fade);
+                animatorSet.playTogether(appear);
+                animatorSet.start();
+                v.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        postMethod.setVisibility(View.INVISIBLE);
+                        btn_post.setClickable(true);
+                        ObjectAnimator rotate = ObjectAnimator.ofFloat(btn_post, "rotation", -45f, 0f).setDuration(0);
+                        rotate.start();
+                    }
+                }, 700);
+            }
+        });
+
+        plain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 btn_cancel.setClickable(false);
