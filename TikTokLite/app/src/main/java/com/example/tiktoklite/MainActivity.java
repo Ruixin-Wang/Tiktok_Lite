@@ -4,10 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
@@ -19,18 +24,15 @@ public class MainActivity extends AppCompatActivity {
     private List<Fragment> list;
     private ViewPager viewPager;
     private mFragmentPagerAdapter Adapter;
-
     private TabLayout mTabLayout;
     private final int[] TAB_TITLES = new int[]{R.string.world,R.string.home,R.string.info};
-
-
-
     private PlaceholderFragmentWorld mPlaceholderFragmentWorld;
     private PlaceholderFragmentHome mPlaceholderFragmentHome;
     private PlaceholderFragmentInfo mPlaceholderFragmentInfo;
 
-
-
+    private ImageButton btn_post, btn_file, btn_rec, btn_cancel;
+    LinearLayout postMethod;
+    private AnimatorSet animatorSet;
 
 
     @SuppressLint("InflateParams")
@@ -38,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         list = new ArrayList<>();
         list.add(new PlaceholderFragmentWorld());
@@ -48,6 +49,13 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.viewpages);
         viewPager.setAdapter(Adapter);
         viewPager.setCurrentItem(0);
+
+        btn_post = findViewById(R.id.btn_post);
+        btn_file = findViewById(R.id.btn_file);
+        btn_rec = findViewById(R.id.btn_rec);
+        btn_cancel = findViewById(R.id.btn_cancel);
+        postMethod = findViewById(R.id.post_method);
+        postMethod.setVisibility(View.INVISIBLE);
 
 
 
@@ -64,8 +72,65 @@ public class MainActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mTabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
+        btn_post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_post.setClickable(false);
+                btn_cancel.setClickable(false);
+                postMethod.setVisibility(View.VISIBLE);
+                postMethod.setAlpha((float)0.0);
+                ObjectAnimator rotate = ObjectAnimator.ofFloat(btn_post, "rotation", 0f, 45f).setDuration(700);
+                rotate.setInterpolator(new BounceInterpolator());
+                ObjectAnimator fade = ObjectAnimator.ofFloat(btn_post,"alpha",1.0f,0.0f).setDuration(700);
+                ObjectAnimator appear = ObjectAnimator.ofFloat(postMethod,"alpha",0.0f,1.0f).setDuration(900);
+                animatorSet = new AnimatorSet();
+                animatorSet.playTogether(rotate);
+                animatorSet.playTogether(fade);
+                animatorSet.playTogether(appear);
+                animatorSet.start();
+                v.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        btn_cancel.setClickable(true);
+                        btn_post.setVisibility(View.INVISIBLE);
+                        ObjectAnimator rotate = ObjectAnimator.ofFloat(btn_post, "rotation", 45f, 0f).setDuration(0);
+                        rotate.start();
+                    }
+                }, 900);
+            }
+        });
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_cancel.setClickable(false);
+                btn_post.setClickable(false);
+                btn_post.setVisibility(View.VISIBLE);
+                btn_post.setAlpha((float)0.0);
+                ObjectAnimator rotate = ObjectAnimator.ofFloat(btn_cancel, "rotation", 0f, -45f).setDuration(700);
+                rotate.setInterpolator(new BounceInterpolator());
+                ObjectAnimator fade = ObjectAnimator.ofFloat(postMethod,"alpha",1.0f,0.0f).setDuration(700);
+                ObjectAnimator appear = ObjectAnimator.ofFloat(btn_post,"alpha",0.0f,1.0f).setDuration(900);
+                animatorSet = new AnimatorSet();
+                animatorSet.playTogether(rotate);
+                animatorSet.playTogether(fade);
+                animatorSet.playTogether(appear);
+                animatorSet.start();
+                v.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        postMethod.setVisibility(View.INVISIBLE);
+                        btn_post.setClickable(true);
+                        ObjectAnimator rotate = ObjectAnimator.ofFloat(btn_post, "rotation", -45f, 0f).setDuration(0);
+                        rotate.start();
+                    }
+                }, 700);
+            }
+        });
 
     }
+
+
 
 
 
