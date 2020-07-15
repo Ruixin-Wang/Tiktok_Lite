@@ -24,7 +24,7 @@ public class PlaceholderFragmentInfo extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_placeholder_world, container, false);
+        View view = inflater.inflate(R.layout.fragment_placeholder_info, container, false);
 
 
 
@@ -35,6 +35,9 @@ public class PlaceholderFragmentInfo extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        // TODO 3: Database-Relative issue
+
 
     }
 }

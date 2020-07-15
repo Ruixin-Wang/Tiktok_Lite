@@ -1,13 +1,17 @@
 package com.example.tiktoklite;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
@@ -23,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int RC_PERMISSION = 1008;
     private List<Fragment> list;
     private ViewPager viewPager;
     private mFragmentPagerAdapter Adapter;
@@ -36,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     FrameLayout postMethod;
     private AnimatorSet animatorSet;
     private ImageView plain;
+
 
 
     @SuppressLint("InflateParams")
@@ -69,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 btn_post.setClickable(false);
                 btn_cancel.setClickable(false);
+                plain.setClickable(false);
                 postMethod.setVisibility(View.VISIBLE);
                 postMethod.setAlpha((float)0.0);
                 ObjectAnimator rotate = ObjectAnimator.ofFloat(btn_post, "rotation", 0f, 45f).setDuration(700);
@@ -145,6 +152,16 @@ public class MainActivity extends AppCompatActivity {
                         rotate.start();
                     }
                 }, 700);
+            }
+        });
+
+        btn_rec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent (MainActivity.this, RecorderActivity.class);
+                startActivity(intent);
+
+
             }
         });
 
