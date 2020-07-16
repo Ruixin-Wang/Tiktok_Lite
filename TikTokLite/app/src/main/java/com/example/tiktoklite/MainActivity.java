@@ -1,27 +1,21 @@
 package com.example.tiktoklite;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
-import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.flyco.tablayout.SlidingTabLayout;
-import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,9 +60,6 @@ public class MainActivity extends AppCompatActivity {
         postMethod.setVisibility(View.INVISIBLE);
         mTabLayout = (SlidingTabLayout)findViewById(R.id.tablayout);
         mTabLayout.setViewPager(viewPager, mTitlesArrays);
-
-
-
 
         btn_post.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,15 +151,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent (MainActivity.this, RecorderActivity.class);
                 startActivity(intent);
-
-
             }
         });
-
     }
-
-
-
-
-
 }
