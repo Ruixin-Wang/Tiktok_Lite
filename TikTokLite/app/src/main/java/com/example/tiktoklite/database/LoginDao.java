@@ -6,10 +6,6 @@ import androidx.room.Query;
 
 import java.util.List;
 
-/**
- * @author wangrui.sh
- * @since Jul 11, 2020
- */
 @Dao
 public interface LoginDao {
     @Query("SELECT * FROM login")

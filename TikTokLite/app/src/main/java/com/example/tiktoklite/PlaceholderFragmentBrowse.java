@@ -157,8 +157,10 @@ public class PlaceholderFragmentBrowse extends Fragment {
                 public void onClick(View v) {
                     ib_like.setClickable(false);
                     AnimatorSet animatorSet = new AnimatorSet();
-                    ObjectAnimator rotate = ObjectAnimator.ofFloat(ib_like, "rotation", 0f, 15f).setDuration(150);
-                    final ObjectAnimator unrotate = ObjectAnimator.ofFloat(ib_like, "rotation", 15f, 0f).setDuration(100);
+                    ObjectAnimator rotate = ObjectAnimator.ofFloat
+                            (ib_like, "rotation", 0f, 15f).setDuration(150);
+                    final ObjectAnimator unrotate = ObjectAnimator.ofFloat
+                            (ib_like, "rotation", 15f, 0f).setDuration(100);
                     rotate.start();
                     v.postDelayed(new Runnable() {
                         @Override
