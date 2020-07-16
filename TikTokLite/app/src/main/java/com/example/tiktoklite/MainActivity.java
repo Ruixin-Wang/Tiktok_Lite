@@ -54,8 +54,12 @@ public class MainActivity extends AppCompatActivity {
     private PlaceholderFragmentHome mPlaceholderFragmentHome;
     private PlaceholderFragmentInfo mPlaceholderFragmentInfo;
 
-    private String id = "18234667586";
-    private String name = "xxxwww";
+    public static String uid = "点击登录";
+    public static String upassword = "未登录";
+    public static int uavatar = R.drawable.unknown;
+
+    private String id;
+    private String name;
 
     private Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(IMiniDouyinService.BASE_URL)
@@ -67,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     FrameLayout postMethod;
     private AnimatorSet animatorSet;
     private ImageView plain;
-    private Button upload;
+    private ImageButton upload;
 
     private Uri mSelectedImage;
     private Uri mSelectedVideo;
@@ -104,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         mTabLayout = (SlidingTabLayout)findViewById(R.id.tablayout);
         mTabLayout.setViewPager(viewPager, mTitlesArrays);
         upload = findViewById(R.id.upload);
+        upload.setVisibility(View.INVISIBLE);
 
         btn_post.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,13 +209,8 @@ public class MainActivity extends AppCompatActivity {
         btn_file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hasChooseImage == false) {
-                    chooseImage();
-                }
-                else if (hasChooseVideo == false) {
-                    chooseVideo();
-                }
-
+                Toast.makeText(MainActivity.this, "选择一张封面图片", Toast.LENGTH_LONG).show();
+                chooseImage();
             }
         });
 
@@ -250,12 +250,18 @@ public class MainActivity extends AppCompatActivity {
                 + "]");
 
         if (resultCode == RESULT_OK && null != data) {
+
+
             if (requestCode == PICK_IMAGE) {
                 mSelectedImage = data.getData();
                 hasChooseImage = true;
                 Log.d(TAG, "selectedImage = " + mSelectedImage);
+                Toast.makeText(MainActivity.this, "选择一个视频", Toast.LENGTH_LONG).show();
+                chooseVideo();
             } else if (requestCode == PICK_VIDEO) {
                 mSelectedVideo = data.getData();
+                upload.setVisibility(View.VISIBLE);
+                upload.setImageResource(R.drawable.post);
                 hasChooseVideo = true;
                 Log.d(TAG, "mSelectedVideo = " + mSelectedVideo);
             } else if (requestCode == RECORD) {
@@ -264,9 +270,17 @@ public class MainActivity extends AppCompatActivity {
                 if(type == 1) {
                     mSelectedImage = Uri.fromFile(new File(path));
                     hasChooseImage = true;
+                    if (hasChooseImage && hasChooseVideo) {
+                        upload.setVisibility(View.VISIBLE);
+                        upload.setImageResource(R.drawable.post);
+                    }
                 } else {
                     mSelectedVideo = Uri.fromFile(new File(path));
                     hasChooseVideo = true;
+                    if (hasChooseImage && hasChooseVideo) {
+                        upload.setVisibility(View.VISIBLE);
+                        upload.setImageResource(R.drawable.post);
+                    }
                 }
             }
         }
@@ -279,12 +293,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void postVideo() {
-        upload.setText("POSTING...");
+
         upload.setEnabled(false);
+        upload.setImageResource(R.drawable.posting);
 
         MultipartBody.Part coverImagePart = getMultipartFromUri("cover_image", mSelectedImage);
         MultipartBody.Part videoPart = getMultipartFromUri("video", mSelectedVideo);
-        //@TODO 4下面的id和名字替换成自己的
+        id = uid;
+        name = upassword;
         miniDouyinService.postVideo(id, name, coverImagePart, videoPart).enqueue(
                 new Callback<PostVideoResponse>() {
                     @Override
@@ -293,14 +309,13 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, response.body().toString(), Toast.LENGTH_SHORT)
                                     .show();
                         }
-                        upload.setText("post it");
-                        upload.setEnabled(true);
+                        upload.setVisibility(View.INVISIBLE);
                     }
 
                     @Override
                     public void onFailure(Call<PostVideoResponse> call, Throwable throwable) {
                         Toast.makeText(MainActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                        upload.setText("post it");
+                        upload.setImageResource(R.drawable.post);
                         upload.setEnabled(true);
                     }
                 });

@@ -37,7 +37,7 @@
             android:visibility="invisible" />
 
         <ImageButton
-            android:id="@+id/btn_no"
+            android:id="@+id/btn_yes"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="bottom|start"
@@ -49,7 +49,7 @@
             app:srcCompat="@drawable/tick" />
 
         <ImageButton
-            android:id="@+id/btn_yes"
+            android:id="@+id/btn_no"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="bottom|end"
