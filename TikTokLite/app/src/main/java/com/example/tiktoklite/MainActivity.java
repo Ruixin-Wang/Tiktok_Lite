@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         btn_cancel.setClickable(true);
+                        plain.setClickable(true);
                         btn_post.setVisibility(View.INVISIBLE);
                         ObjectAnimator rotate = ObjectAnimator.ofFloat(btn_post, "rotation", 45f, 0f).setDuration(0);
                         rotate.start();
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 btn_cancel.setClickable(false);
                 btn_post.setClickable(false);
+                plain.setClickable(false);
                 btn_post.setVisibility(View.VISIBLE);
                 btn_post.setAlpha((float)0.0);
                 ObjectAnimator rotate = ObjectAnimator.ofFloat(btn_cancel, "rotation", 0f, -45f).setDuration(700);
@@ -132,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 btn_cancel.setClickable(false);
                 btn_post.setClickable(false);
+                plain.setClickable(false);
                 btn_post.setVisibility(View.VISIBLE);
                 btn_post.setAlpha((float)0.0);
                 ObjectAnimator rotate = ObjectAnimator.ofFloat(btn_cancel, "rotation", 0f, -45f).setDuration(700);
