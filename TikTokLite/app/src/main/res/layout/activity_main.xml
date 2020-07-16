@@ -17,8 +17,8 @@
         app:tl_indicator_color="@color/colorAccent"
         app:tl_indicator_corner_radius="17dp"
         app:tl_indicator_margin_bottom="12dp"
-        app:tl_indicator_margin_left="30dp"
-        app:tl_indicator_margin_right="30dp"
+        app:tl_indicator_margin_left="12dp"
+        app:tl_indicator_margin_right="12dp"
         app:tl_indicator_margin_top="14dp"
         app:tl_indicator_style="BLOCK"
 

@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private mFragmentPagerAdapter Adapter;
     private SlidingTabLayout  mTabLayout;
-    private String[] mTitlesArrays ={"广场","我的","主页"};
+    private String[] mTitlesArrays ={"视频","广场","我的","主页"};
     private PlaceholderFragmentWorld mPlaceholderFragmentWorld;
     private PlaceholderFragmentHome mPlaceholderFragmentHome;
     private PlaceholderFragmentInfo mPlaceholderFragmentInfo;
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         list = new ArrayList<>();
+        list.add(new PlaceholderFragmentBrowse());
         list.add(new PlaceholderFragmentWorld());
         list.add(new PlaceholderFragmentHome());
         list.add(new PlaceholderFragmentInfo());
@@ -113,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
         btn_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                upload.setVisibility(View.INVISIBLE);
+                upload.setClickable(false);
                 btn_post.setClickable(false);
                 btn_cancel.setClickable(false);
                 plain.setClickable(false);
@@ -261,6 +264,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (requestCode == PICK_VIDEO) {
                 mSelectedVideo = data.getData();
                 upload.setVisibility(View.VISIBLE);
+                upload.setClickable(true);
                 upload.setImageResource(R.drawable.post);
                 hasChooseVideo = true;
                 Log.d(TAG, "mSelectedVideo = " + mSelectedVideo);
@@ -272,6 +276,7 @@ public class MainActivity extends AppCompatActivity {
                     hasChooseImage = true;
                     if (hasChooseImage && hasChooseVideo) {
                         upload.setVisibility(View.VISIBLE);
+                        upload.setClickable(true);
                         upload.setImageResource(R.drawable.post);
                     }
                 } else {
@@ -279,6 +284,7 @@ public class MainActivity extends AppCompatActivity {
                     hasChooseVideo = true;
                     if (hasChooseImage && hasChooseVideo) {
                         upload.setVisibility(View.VISIBLE);
+                        upload.setClickable(true);
                         upload.setImageResource(R.drawable.post);
                     }
                 }
@@ -309,7 +315,6 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, response.body().toString(), Toast.LENGTH_SHORT)
                                     .show();
                         }
-                        upload.setVisibility(View.INVISIBLE);
                     }
 
                     @Override
@@ -319,5 +324,6 @@ public class MainActivity extends AppCompatActivity {
                         upload.setEnabled(true);
                     }
                 });
+        upload.setVisibility(View.INVISIBLE);
     }
 }
