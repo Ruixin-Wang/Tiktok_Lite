@@ -15,14 +15,20 @@ import com.example.tiktoklite.database.LoginDao;
 import com.example.tiktoklite.database.LoginDatabase;
 import com.example.tiktoklite.database.LoginEntity;
 import com.example.tiktoklite.MainActivity;
+import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Date;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText id, passsword;
     private ImageButton OK;
 
+    private String uid;
+    private String upassword;
 
 
     @Override
@@ -40,12 +46,28 @@ public class LoginActivity extends AppCompatActivity {
         OK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.uavatar = R.drawable.zju;
-                MainActivity.uid = id.getText().toString();
-                MainActivity.upassword = passsword.getText().toString();
-
-                Intent intent = new Intent (LoginActivity.this, MainActivity.class);
-                startActivity(intent);
+                new Thread() {
+                    @Override
+                    public void run() {
+                        uid = id.getText().toString();
+                        upassword = passsword.getText().toString();
+                        LoginDao dao = LoginDatabase.inst(LoginActivity.this).loginDao();
+                        Intent returnIntent = new Intent();
+                        String name = dao.select_id(uid);
+                        if(name.equals(upassword)) {
+                            MainActivity.uid = uid;
+                            MainActivity.upassword = upassword;
+                            MainActivity.uavatar = R.drawable.zju;
+                            returnIntent.putExtra("istrue", 1);
+                            Log.d(TAG, "istrue");
+                        } else {
+                            returnIntent.putExtra("istrue", 0);
+                            Log.d(TAG, "isfalse");
+                        }
+                        setResult(RESULT_OK, returnIntent);
+                        LoginActivity.this.finish();
+                    }
+                }.start();
             }
         });
 
@@ -55,7 +77,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Intent intent = new Intent (LoginActivity.this, MainActivity.class);
-        startActivity(intent);
+
     }
 }
