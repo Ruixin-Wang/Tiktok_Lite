@@ -15,6 +15,9 @@ public interface LoginDao {
     @Query("SELECT * FROM login")
     List<LoginEntity> loadAll();
 
+    @Query("SELECT name FROM login WHERE id = :userId")
+    String select_id(String userId);
+
     @Insert
     long addInfo(LoginEntity entity);
 
