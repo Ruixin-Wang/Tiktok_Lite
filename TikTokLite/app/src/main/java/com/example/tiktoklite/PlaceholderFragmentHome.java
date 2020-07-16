@@ -51,8 +51,8 @@ public class PlaceholderFragmentHome extends Fragment {
     public Uri mSelectedImage;
     private Uri mSelectedVideo;
 
-    private String id = "18234667586";
-    private String name = "xxxwww";
+    private String id = MainActivity.uid;
+    private String name = MainActivity.upassword;
 
     private Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(IMiniDouyinService.BASE_URL)
@@ -135,7 +135,6 @@ public class PlaceholderFragmentHome extends Fragment {
             public void onResponse(Call<GetVideosResponse> call, Response<GetVideosResponse> response) {
                 if (response.body() != null && response.body().videos != null) {
                     mVideos = response.body().videos;
-                    //@TODO  5服务端没有做去重，拿到列表后，可以在端侧根据自己的id，做列表筛选。
                     Iterator<Video> it = mVideos.iterator();
                     while(it.hasNext()){
                         Video v = it.next();

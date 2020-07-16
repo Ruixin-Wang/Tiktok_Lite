@@ -66,7 +66,7 @@ public class PlaceholderFragmentInfo extends Fragment implements View.OnClickLis
             }
         });
 
-        ShiftAccount.setOnClickListener(new View.OnClickListener() {
+        tv_userid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
