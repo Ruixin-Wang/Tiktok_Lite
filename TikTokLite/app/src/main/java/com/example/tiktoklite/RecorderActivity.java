@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +18,7 @@ import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -52,6 +54,9 @@ public class RecorderActivity extends AppCompatActivity implements SurfaceHolder
     private ImageButton btn_yes, btn_no;
     private ImageView iv_focus;
     private String vpath;
+    private String ipath;
+
+    private int returnType = 0;
     private boolean isRecording;
 
     @Override
@@ -242,6 +247,7 @@ public class RecorderActivity extends AppCompatActivity implements SurfaceHolder
         public void onPictureTaken(byte[] data, Camera camera) {
             FileOutputStream fos = null;
             String fpath = getOutputImagePath();
+            ipath = fpath;
             File file = new File(fpath);
             try {
                 fos = new FileOutputStream(file);
@@ -258,6 +264,7 @@ public class RecorderActivity extends AppCompatActivity implements SurfaceHolder
                 btn_no.setVisibility(View.VISIBLE);
                 btn_no.setClickable(true);
                 iv.setImageBitmap(rotateBitmap);
+                returnType = 1;
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -312,6 +319,7 @@ public class RecorderActivity extends AppCompatActivity implements SurfaceHolder
             iv.setVisibility(View.GONE);
             vv.setVideoPath(vpath);
             vv.start();
+            returnType = 2;
         } else {
             if (prepareVideoRecorder()) {
                 btn_rec.setImageResource(R.drawable.stop);
@@ -371,7 +379,15 @@ public class RecorderActivity extends AppCompatActivity implements SurfaceHolder
                 btn_no.setVisibility(View.GONE);
 
                 // TODO 1: Upload the video
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("type", returnType);
+                if(returnType == 1)
+                    returnIntent.putExtra("path", ipath);
+                else
+                    returnIntent.putExtra("path", vpath);
 
+                setResult(RESULT_OK, returnIntent);
+                RecorderActivity.this.finish();
             }
         });
 
