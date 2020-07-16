@@ -4,21 +4,44 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.tiktoklite.api.IMiniDouyinService;
+import com.example.tiktoklite.model.GetVideosResponse;
+import com.example.tiktoklite.model.Video;
+import com.example.tiktoklite.util.ImageHelper;
+import com.example.tiktoklite.util.ResourceUtils;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import com.example.tiktoklite.model.PostVideoResponse;
 import com.flyco.tablayout.SlidingTabLayout;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.net.Uri.fromFile;
 
 public class MainActivity extends AppCompatActivity {
     private static final int RC_PERMISSION = 1008;
@@ -31,12 +54,32 @@ public class MainActivity extends AppCompatActivity {
     private PlaceholderFragmentHome mPlaceholderFragmentHome;
     private PlaceholderFragmentInfo mPlaceholderFragmentInfo;
 
+    private String id = "18234667586";
+    private String name = "xxxwww";
+
+    private Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(IMiniDouyinService.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+    private IMiniDouyinService miniDouyinService = retrofit.create(IMiniDouyinService.class);
+
     private ImageButton btn_post, btn_file, btn_rec, btn_cancel;
     FrameLayout postMethod;
     private AnimatorSet animatorSet;
     private ImageView plain;
+    private Button upload;
 
+    private Uri mSelectedImage;
+    private Uri mSelectedVideo;
 
+    private boolean hasChooseImage = false;
+    private boolean hasChooseVideo = false;
+
+    private final int PICK_IMAGE = 1;
+    private final int PICK_VIDEO = 2;
+    private final int RECORD = 3;
+
+    private final String TAG = "MainActivity";
 
     @SuppressLint("InflateParams")
     @Override
@@ -60,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         postMethod.setVisibility(View.INVISIBLE);
         mTabLayout = (SlidingTabLayout)findViewById(R.id.tablayout);
         mTabLayout.setViewPager(viewPager, mTitlesArrays);
+        upload = findViewById(R.id.upload);
 
         btn_post.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,8 +197,112 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent (MainActivity.this, RecorderActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, RECORD);
             }
         });
+
+        btn_file.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (hasChooseImage == false) {
+                    chooseImage();
+                }
+                else if (hasChooseVideo == false) {
+                    chooseVideo();
+                }
+
+            }
+        });
+
+        upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postVideo();
+            }
+        });
+
+    }
+
+    public void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+    }
+
+    public void chooseVideo() {
+        Intent intent = new Intent();
+        intent.setType("video/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Video"), PICK_VIDEO);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d(TAG, "onActivityResult() called with: requestCode = ["
+                + requestCode
+                + "], resultCode = ["
+                + resultCode
+                + "], data = ["
+                + data
+                + "]");
+
+        if (resultCode == RESULT_OK && null != data) {
+            if (requestCode == PICK_IMAGE) {
+                mSelectedImage = data.getData();
+                hasChooseImage = true;
+                Log.d(TAG, "selectedImage = " + mSelectedImage);
+            } else if (requestCode == PICK_VIDEO) {
+                mSelectedVideo = data.getData();
+                hasChooseVideo = true;
+                Log.d(TAG, "mSelectedVideo = " + mSelectedVideo);
+            } else if (requestCode == RECORD) {
+                int type = data.getIntExtra("type", -1);
+                String path = data.getStringExtra("path");
+                if(type == 1) {
+                    mSelectedImage = Uri.fromFile(new File(path));
+                    hasChooseImage = true;
+                } else {
+                    mSelectedVideo = Uri.fromFile(new File(path));
+                    hasChooseVideo = true;
+                }
+            }
+        }
+    }
+
+    private MultipartBody.Part getMultipartFromUri(String name, Uri uri) {
+        File f = new File(ResourceUtils.getRealPath(MainActivity.this, uri));
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
+        return MultipartBody.Part.createFormData(name, f.getName(), requestFile);
+    }
+
+    private void postVideo() {
+        upload.setText("POSTING...");
+        upload.setEnabled(false);
+
+        MultipartBody.Part coverImagePart = getMultipartFromUri("cover_image", mSelectedImage);
+        MultipartBody.Part videoPart = getMultipartFromUri("video", mSelectedVideo);
+        //@TODO 4下面的id和名字替换成自己的
+        miniDouyinService.postVideo(id, name, coverImagePart, videoPart).enqueue(
+                new Callback<PostVideoResponse>() {
+                    @Override
+                    public void onResponse(Call<PostVideoResponse> call, Response<PostVideoResponse> response) {
+                        if (response.body() != null) {
+                            Toast.makeText(MainActivity.this, response.body().toString(), Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                        upload.setText("post it");
+                        upload.setEnabled(true);
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostVideoResponse> call, Throwable throwable) {
+                        Toast.makeText(MainActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                        upload.setText("post it");
+                        upload.setEnabled(true);
+                    }
+                });
     }
 }

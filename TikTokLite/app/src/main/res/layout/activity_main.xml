@@ -105,16 +105,16 @@
                     android:visibility="visible"
                     app:srcCompat="@mipmap/file" />
 
-                <ImageButton
-                    android:id="@+id/dummy"
+                <Button
+                    android:id="@+id/upload"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="bottom|center"
                     android:layout_margin="0dp"
                     android:layout_weight="1"
-                    android:background="#0017202A"
                     android:scaleType="centerInside"
-                    android:visibility="invisible" />
+                    android:visibility="visible"
+                    android:text="post it!"/>
 
                 <ImageButton
                     android:id="@+id/btn_rec"

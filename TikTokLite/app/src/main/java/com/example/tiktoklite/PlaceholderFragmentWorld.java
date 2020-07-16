@@ -50,8 +50,8 @@ public class PlaceholderFragmentWorld extends Fragment {
     public Uri mSelectedImage;
     private Uri mSelectedVideo;
 
-    private String id = "18888913824";
-    private String name = "wubuyao";
+    private String id = "18234667586";
+    private String name = "xxxwww";
 
     private Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(IMiniDouyinService.BASE_URL)
