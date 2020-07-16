@@ -14,7 +14,7 @@
         android:paddingRight="16dp">
 
         <TextView
-            android:id="@+id/tv_user"
+            android:id="@+id/tv_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="90dp"
@@ -40,29 +40,31 @@
             app:srcCompat="@drawable/unknown" />
 
         <TextView
-            android:id="@+id/tv_login"
+            android:id="@+id/tv_userid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="90dp"
             android:layout_marginLeft="90dp"
+            android:clickable="true"
             android:text="点击登录"
             android:textColor="@android:color/darker_gray"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_user"
+            app:layout_constraintTop_toBottomOf="@+id/tv_username"
             app:layout_constraintVertical_bias="0.3" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
-        android:layout_height="1dp"
+        android:id="@+id/divider1"
         android:layout_width="match_parent"
-        android:background="#D5D8DC"
-        />
+        android:layout_height="1dp"
+        android:background="#808B96" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/Likes"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:paddingLeft="16dp"
@@ -98,7 +100,14 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:foreground="@drawable/bar" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/Favorites"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:paddingLeft="16dp"
@@ -130,6 +139,49 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/star" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:foreground="@drawable/bar" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/shiftAccount"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/tv_shift"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="70dp"
+            android:layout_marginLeft="70dp"
+            android:text="切换账号"
+            android:textColor="@color/colorAccent"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/iv_shift"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="21dp"
+            android:layout_marginLeft="21dp"
+            android:scaleType="centerInside"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/shift" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

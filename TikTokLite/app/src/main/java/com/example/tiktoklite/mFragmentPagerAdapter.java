@@ -25,4 +25,8 @@ public class mFragmentPagerAdapter extends FragmentPagerAdapter {
         public int getCount() {
             return mlist.size();
         }
+
+    public interface IOnItemClickListener {
+        void onItemCLick();
+    }
     }

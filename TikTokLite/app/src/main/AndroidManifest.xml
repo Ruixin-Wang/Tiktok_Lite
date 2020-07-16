@@ -23,6 +23,8 @@
         <activity android:name=".MainActivity"/>
         <activity android:name=".RecorderActivity"/>
         <activity android:name=".VideoActivity"/>
+        <activity android:name=".LoginActivity"/>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

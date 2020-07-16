@@ -1,26 +1,40 @@
 package com.example.tiktoklite;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+
+import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.tiktoklite.database.LoginDao;
+import com.example.tiktoklite.database.LoginDatabase;
+import com.example.tiktoklite.database.LoginEntity;
 import com.flyco.tablayout.SlidingTabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements mFragmentPagerAdapter.IOnItemClickListener {
     private static final int RC_PERMISSION = 1008;
     private List<Fragment> list;
     private ViewPager viewPager;
@@ -31,10 +45,15 @@ public class MainActivity extends AppCompatActivity {
     private PlaceholderFragmentHome mPlaceholderFragmentHome;
     private PlaceholderFragmentInfo mPlaceholderFragmentInfo;
 
+    public static String uid = "点击登录", upassword = "未登录";
+    public static int uavatar = R.drawable.unknown;
+
     private ImageButton btn_post, btn_file, btn_rec, btn_cancel;
     FrameLayout postMethod;
     private AnimatorSet animatorSet;
     private ImageView plain;
+
+
 
 
 
@@ -60,6 +79,22 @@ public class MainActivity extends AppCompatActivity {
         postMethod.setVisibility(View.INVISIBLE);
         mTabLayout = (SlidingTabLayout)findViewById(R.id.tablayout);
         mTabLayout.setViewPager(viewPager, mTitlesArrays);
+
+
+
+        if (!(ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+                || !(ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+                || !(ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)) {
+            //没有权限，申请权限
+            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
+            //申请权限，其中RC_PERMISSION是权限申请码，用来标志权限申请的
+            ActivityCompat.requestPermissions(MainActivity.this,permissions, RC_PERMISSION);
+        }else {
+            //拥有权限
+        }
+
+
+
 
         btn_post.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,4 +192,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    @Override
+    public void onItemCLick() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+
 }

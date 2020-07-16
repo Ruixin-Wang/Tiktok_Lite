@@ -8,4 +8,9 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">#E5E7E9</item>
+        <item name="colorControlActivated">#CD6155</item>
+    </style>
+
 </resources>
