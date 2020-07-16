@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
     private PlaceholderFragmentHome mPlaceholderFragmentHome;
     private PlaceholderFragmentInfo mPlaceholderFragmentInfo;
 
-    public static String uid = "点击登录";
-    public static String upassword = "未登录";
+    public static String uid = "";
+    public static String upassword = "";
     public static int uavatar = R.drawable.unknown;
 
     private String id;
@@ -220,6 +220,7 @@ public class MainActivity extends AppCompatActivity {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                upload.setImageResource(R.drawable.posting);
                 postVideo();
             }
         });
@@ -315,15 +316,16 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, response.body().toString(), Toast.LENGTH_SHORT)
                                     .show();
                         }
+                        upload.setVisibility(View.INVISIBLE);
                     }
 
                     @Override
                     public void onFailure(Call<PostVideoResponse> call, Throwable throwable) {
                         Toast.makeText(MainActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                        upload.setImageResource(R.drawable.post);
+                         upload.setImageResource(R.drawable.post);
                         upload.setEnabled(true);
                     }
                 });
-        upload.setVisibility(View.INVISIBLE);
+
     }
 }

@@ -67,6 +67,7 @@ public class PlaceholderFragmentHome extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_placeholder_world, container, false);
         mRv = view.findViewById(R.id.rv);
+        id = MainActivity.uid;
         initRecyclerView();
         fetchFeed(view);
         return view;

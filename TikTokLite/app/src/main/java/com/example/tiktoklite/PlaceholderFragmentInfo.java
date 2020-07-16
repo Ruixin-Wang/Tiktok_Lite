@@ -2,7 +2,9 @@ package com.example.tiktoklite;
 
 
 import android.animation.AnimatorSet;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +37,8 @@ import static android.content.ContentValues.TAG;
 public class PlaceholderFragmentInfo extends Fragment implements View.OnClickListener{
 
     private boolean DEBUG = false;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     private ConstraintLayout Likes, Favorites, ShiftAccount;
     private mFragmentPagerAdapter.IOnItemClickListener mItemClickListener;
@@ -43,10 +47,11 @@ public class PlaceholderFragmentInfo extends Fragment implements View.OnClickLis
 
     private final int LOGIN = 100;
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        sharedPreferences= getActivity().getSharedPreferences("data",Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
         View view = inflater.inflate(R.layout.fragment_placeholder_info, container, false);
         Likes = view.findViewById(R.id.Likes);
@@ -63,11 +68,22 @@ public class PlaceholderFragmentInfo extends Fragment implements View.OnClickLis
                 public void run() {
                     LoginDao dao = LoginDatabase.inst(getActivity()).loginDao();
                     dao.deleteAll();
-                    dao.addInfo(new LoginEntity("zju", "zju", 1));
-                    dao.addInfo(new LoginEntity("110", "okk", 2));
+                    dao.addInfo(new LoginEntity("18888917864", "wrx", 1));
+                    dao.addInfo(new LoginEntity("lbwnb", "得得得得得", 2));
+                    dao.addInfo(new LoginEntity("barca21", "frenkiedejong", 3));
                 }
             }.start();
         }
+        tv_username = view.findViewById(R.id.tv_username);
+        tv_userid = view.findViewById(R.id.tv_userid);
+        iv_avatar = view.findViewById(R.id.iv_avatar);
+        MainActivity.uid = sharedPreferences.getString("id", null);
+        MainActivity.upassword = sharedPreferences.getString("password", null);
+        MainActivity.uavatar = sharedPreferences.getInt("avatar", 0);
+
+        tv_username.setText(MainActivity.upassword);
+        tv_userid.setText(MainActivity.uid);
+        iv_avatar.setImageResource(MainActivity.uavatar);
 
         return view;
     }
@@ -129,6 +145,10 @@ public class PlaceholderFragmentInfo extends Fragment implements View.OnClickLis
                     tv_username.setText(MainActivity.upassword);
                     tv_userid.setText(MainActivity.uid);
                     iv_avatar.setImageResource(MainActivity.uavatar);
+                    editor.putString("id", MainActivity.uid);
+                    editor.putString("password", MainActivity.upassword);
+                    editor.putInt("avatar", MainActivity.uavatar);
+                    editor.commit();
                 } else {
                     Toast toast=Toast.makeText(getActivity(),"Wrong password",Toast.LENGTH_SHORT);
                     toast.show();
