@@ -70,7 +70,7 @@ public class PlaceholderFragmentInfo extends Fragment implements View.OnClickLis
                     dao.deleteAll();
                     dao.addInfo(new LoginEntity("18888917864", "wrx", 1));
                     dao.addInfo(new LoginEntity("lbwnb", "得得得得得", 2));
-                    dao.addInfo(new LoginEntity("barca21", "frenkiedejong", 3));
+                    dao.addInfo(new LoginEntity("zjuguest", "zjutest", 3));
                 }
             }.start();
         }

@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
                 if(type == 1) {
                     mSelectedImage = Uri.fromFile(new File(path));
                     hasChooseImage = true;
-                    if (hasChooseImage && hasChooseVideo) {
+                    if (hasChooseVideo) {
                         upload.setVisibility(View.VISIBLE);
                         upload.setClickable(true);
                         upload.setImageResource(R.drawable.post);
@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     mSelectedVideo = Uri.fromFile(new File(path));
                     hasChooseVideo = true;
-                    if (hasChooseImage && hasChooseVideo) {
+                    if (hasChooseImage) {
                         upload.setVisibility(View.VISIBLE);
                         upload.setClickable(true);
                         upload.setImageResource(R.drawable.post);
@@ -303,6 +303,7 @@ public class MainActivity extends AppCompatActivity {
 
         upload.setEnabled(false);
         upload.setImageResource(R.drawable.posting);
+
 
         MultipartBody.Part coverImagePart = getMultipartFromUri("cover_image", mSelectedImage);
         MultipartBody.Part videoPart = getMultipartFromUri("video", mSelectedVideo);
@@ -326,6 +327,7 @@ public class MainActivity extends AppCompatActivity {
                         upload.setEnabled(true);
                     }
                 });
-
+        upload.setClickable(true);
+        hasChooseVideo = false; hasChooseImage = false;
     }
 }
